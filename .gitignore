@@ -1,7 +1,9 @@
+# IDE
+/.vscode
 
-
-/notebooks
-
+# Python
 __pycache__
+*.pyc
 
-.vscode
+# Project
+/notebooks

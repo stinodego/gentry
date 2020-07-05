@@ -1,1 +1,1 @@
-uvicorn main:app --reload
+docker run -d --name poems --rm -P poems

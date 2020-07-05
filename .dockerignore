@@ -1,0 +1,20 @@
+# Git
+.git
+.gitlab-ci.yml
+
+# IDE
+.vscode
+
+# Python
+**/__pycache__
+**/*.pyc
+
+# Docker
+Dockerfile
+.dockerignore
+
+# Project
+notebooks
+README.md
+build.sh
+run.sh
