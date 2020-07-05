@@ -1,5 +1,5 @@
-# QUOTES
+# POEMS
 
-This is a simple application that pulls up a random quote.
+This is a simple application that pulls up a random poem.
 
-Implementing this in a modern framework with deployment is a learning opportunity!
+In later iterations, the app will generate poems automatically.
