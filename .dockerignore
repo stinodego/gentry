@@ -1,20 +1,25 @@
 # Git
 .git
+.gitignore
 .gitlab-ci.yml
-
-# IDE
-.vscode
-
-# Python
-**/__pycache__
-**/*.pyc
+.gitkeep
 
 # Docker
 Dockerfile
 .dockerignore
 
+# Python
+**/__pycache__/
+**/*.pyc
+**/.ipynb_checkpoints/
+**/*.ipynb
+
+# IDE
+.vscode/
+
 # Project
-notebooks
+bin/
+notebooks/
 README.md
-build.sh
-run.sh
+.env
+.env.sample
