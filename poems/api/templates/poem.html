@@ -1,0 +1,12 @@
+<html>
+<head>
+    <title>Poem of the day</title>
+    <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <p>{{ body }}</p>
+    <p><b>{{ author }}</b></p>
+    <p><i>{{ source }}</i></p>
+</body>
+</html>

@@ -20,12 +20,12 @@ before_script:
 
 lint:
   stage: qa
-  image: python:3.8-slim
+  image: python:3.8-alpine
   services: []
   before_script: []
   script:
     - pip install flake8
-    - python -m flake8
+    - flake8
 
 build-image:
   stage: build
