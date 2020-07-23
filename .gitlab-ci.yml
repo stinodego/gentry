@@ -1,10 +1,10 @@
-image: docker:19.03.11
+image: docker:19.03
 services:
-  - docker:19.03.11-dind
+  - docker:19.03-dind
 
 stages:
-  - qa
   - build
+  - qa
   - test
   - release
   - deploy
@@ -18,27 +18,33 @@ variables:
 before_script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-lint:
-  stage: qa
-  image: python:3.8-alpine
-  services: []
-  before_script: []
-  script:
-    - pip install flake8
-    - flake8
-
-build-image:
+build-images:
   stage: build
   script:
+    # - docker pull $CONTAINER_TEST_IMAGE-base || true
+    # - docker pull $CONTAINER_TEST_IMAGE-build || true
+    - docker pull $CONTAINER_TEST_IMAGE-dev || true
     - docker pull $CONTAINER_TEST_IMAGE || true
-    - docker build --pull --cache-from $CONTAINER_TEST_IMAGE -t $CONTAINER_TEST_IMAGE .
+    # - docker build --cache-from $CONTAINER_TEST_IMAGE-base -t $CONTAINER_TEST_IMAGE-base --target=base .
+    # - docker build --cache-from $CONTAINER_TEST_IMAGE-build -t $CONTAINER_TEST_IMAGE-build --target=build .
+    - docker build --cache-from $CONTAINER_TEST_IMAGE-build -t $CONTAINER_TEST_IMAGE-dev --target=dev .
+    - docker build --cache-from $CONTAINER_TEST_IMAGE -t $CONTAINER_TEST_IMAGE --target=release .
+    # - docker push $CONTAINER_TEST_IMAGE-base
+    # - docker push $CONTAINER_TEST_IMAGE-build
+    - docker push $CONTAINER_TEST_IMAGE-dev
     - docker push $CONTAINER_TEST_IMAGE
 
-unittest:
+lint:
+  stage: qa
+  script:
+    - docker pull $CONTAINER_TEST_IMAGE-dev
+    - docker run $CONTAINER_TEST_IMAGE-dev bash ./scripts/lint.sh
+
+test:
   stage: test
   script:
-    - docker pull $CONTAINER_TEST_IMAGE
-    - docker run $CONTAINER_TEST_IMAGE  python -m unittest
+    - docker pull $CONTAINER_TEST_IMAGE-dev
+    - docker run $CONTAINER_TEST_IMAGE-dev bash ./scripts/test.sh
 
 release-image:
   stage: release

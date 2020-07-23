@@ -8,6 +8,12 @@ __pycache__/
 /dist
 *.egg-info/
 
+# Testing
+/.mypy_cache/
+/.pytest_cache/
+/.tox/
+.coverage
+
 # Project
 /notebooks
 .env
