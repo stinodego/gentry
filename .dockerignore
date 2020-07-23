@@ -13,13 +13,18 @@ Dockerfile
 **/*.pyc
 **/.ipynb_checkpoints/
 **/*.ipynb
+dist/
+
+# Testing
+.mypy_cache/
+.pytest_cache/
+.tox/
+.coverage
 
 # IDE
 .vscode/
 
 # Project
-bin/
 notebooks/
-README.md
 .env
 .env.sample
