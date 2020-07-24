@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+set -xe
+
+coverage run -m pytest "${@}"
+coverage report -m

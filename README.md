@@ -1,5 +1,8 @@
 # POEMS
 
+[![pipeline status](https://gitlab.com/stinodego/poems/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/poems/-/commits/develop)
+[![coverage report](https://gitlab.com/stinodego/poems/badges/develop/coverage.svg)](https://gitlab.com/stinodego/poems/-/commits/develop)
+
 This is a simple application that pulls up a random poem.
 
 In later iterations, the app will generate poems automatically.
