@@ -3,10 +3,10 @@ name = "poems"
 version = "0.1.0"
 description = "Automagically generate poems."
 license = "Proprietary"
-authors = ["Stijn de Gooijer <stijndegooijer@gmail.com>"]
+authors = ["Stijn de Gooijer <stijn@degooijer.io>"]
 repository = "https://gitlab.com/stinodego/poems"
 packages = [
-    { include = "poems", from = "src" },
+    { include = "poems", from = "src" }
 ]
 
 [tool.poetry.dependencies]
@@ -15,18 +15,18 @@ fastapi = "^0.59.0"
 uvicorn = "^0.11.6"
 jinja2 = "^2.11.2"
 aiofiles = "^0.5.0"
+gunicorn = "^20.0.4"
 
 [tool.poetry.dev-dependencies]
-pytest = "^5.4.3"
-pytest-mock = "^3.2.0"
-pytest-cov = "^2.10.0"
 requests = "^2.24.0"
 flake8 = "^3.8.3"
 black = "^19.10b0"
-isort = "^5.1.2"
-autoflake = "^1.3.1"
+isort = "^5.1.4"
 mypy = "^0.782"
 pre-commit = "^2.6.0"
+coverage = {extras = ["toml"], version = "^5.2"}
+pytest = "^6.0.0rc1"
+pytest-mock = "^3.2.0"
 
 [tool.black]
 line-length = 88
@@ -35,6 +35,17 @@ target-version = ['py38']
 [tool.isort]
 profile = "black"
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage]
+    [tool.coverage.run]
+    source = ["src"]
+    branch = true
+    [tool.coverage.report]
+    fail_under = 100
 [build-system]
 requires = ["poetry_core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

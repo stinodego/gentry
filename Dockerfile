@@ -1,21 +1,22 @@
+# --- BASE IMAGE WITH USEFUL ENVS --- #
 FROM python:3.8-slim AS base
 
-# Set useful Python/pip/poetry settings
+# Nice-to-have optimizations
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_NO_CACHE_DIR=off \
     PIP_DISABLE_PIP_VERSION_CHECK=on \
     PIP_DEFAULT_TIMEOUT=100 \
-    POETRY_VIRTUALENVS_IN_PROJECT=true \
-    POETRY_NO_INTERACTION=1 \
+# Required settings
+    POETRY_VIRTUALENVS_CREATE=false \
     POETRY_HOME=/opt/poetry \
-    PYSETUP_PATH=/opt/pysetup
-ENV VENV_PATH=$PYSETUP_PATH/.venv
+    VENV_PATH=/opt/venv
 
-# Activate poetry command and virtual env
-ENV PATH="$POETRY_HOME/bin:$VENV_PATH/bin:$PATH"
+# Set path for using poetry and virtual env
+ENV PATH="$VENV_PATH/bin:$POETRY_HOME/bin:$PATH"
 
 
+# --- BUILD IMAGE WITH RUNTIME DEPENDENCIES --- #
 FROM base AS build
 
 # Install system dependencies
@@ -26,47 +27,45 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 # Install Poetry
 RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 
+# Create virtual env (already activated in PATH)
+RUN python -m venv $VENV_PATH
+
 # Install Python runtime dependencies
-WORKDIR $PYSETUP_PATH
+WORKDIR /app
 COPY pyproject.toml poetry.lock ./
 RUN poetry install --no-root --no-dev
 
-# Install local package
+# Install local package (poetry does not support non-editable installs yet)
 COPY src/ src/
-RUN poetry build && $VENV_PATH/bin/pip install dist/*.whl
+RUN poetry build && pip install dist/*.whl
 
 
+# --- DEV IMAGE WITH ADDITIONAL DEPENDENCIES --- #
 FROM base as dev
 
-# Copy Poetry and venv into image
+# Copy dependencies from build image
 COPY --from=build $POETRY_HOME $POETRY_HOME
 COPY --from=build $VENV_PATH $VENV_PATH
+COPY --from=build /app /app
 
-# Install Python dev dependencies
-WORKDIR $PYSETUP_PATH
-COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root
-
-# Editable install of local package
-COPY . .
+# Install additional dependencies and editable local package
+WORKDIR /app
 RUN poetry install
+
+# Copy all test, scripts, settings, etc.
+COPY . .
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
+CMD ["uvicorn", "poems.main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
 
 
+# --- MINIMAL RELEASE IMAGE --- #
 FROM base as release
 
 COPY --from=build $VENV_PATH $VENV_PATH
 
-WORKDIR $VENV_PATH/lib/python3.8/site-packages/poems
-
-# WORKDIR /app
-# COPY src/poems/main.py ./
-# COPY src/poems/static/ ./static/
-# COPY src/poems/templates/ ./templates/
-
+# Run as non-root user
 ARG USER_ID=999
 ARG GROUP_ID=999
 RUN groupadd -r -g $GROUP_ID appuser \
@@ -75,4 +74,4 @@ USER appuser
 
 EXPOSE 8000
 
-CMD ["uvicorn", "main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
+CMD ["uvicorn", "poems.main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
