@@ -16,9 +16,9 @@ variables:
   RELEASE_IMG: $CI_REGISTRY_IMAGE:latest
 
 before_script:
-  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - echo "$CI_DEPLOY_TOKEN" | docker login --username $CI_TOKEN_USER --password-stdin $CI_REGISTRY
 
-build-images:
+dockerize:
   stage: build
   script:
     - docker pull $BRANCH_IMG-base || true
@@ -51,7 +51,7 @@ build-images:
     - docker push $BRANCH_IMG
 
 lint:
-  stage: qa
+  stage: test
   script:
     - docker pull $BRANCH_IMG-dev
     - docker run $BRANCH_IMG-dev bash ./scripts/lint
@@ -71,9 +71,30 @@ release-image:
   only:
     - master
 
-# deploy:
-#   stage: deploy
-#   script:
-#     - ./deploy.sh
-#   only:
-#     - master
+deploy-to-heroku:
+  stage: deploy
+  variables:
+    HEROKU_APP: gentry-app
+    HEROKU_REGISTRY: registry.heroku.com
+    HEROKU_IMG: $HEROKU_REGISTRY/$HEROKU_APP/web
+  script:
+    - docker pull $RELEASE_IMG
+    - docker tag $RELEASE_IMG $HEROKU_IMG
+    - echo "$HEROKU_TOKEN" | docker login --username _ --password-stdin $HEROKU_REGISTRY
+    - docker push $HEROKU_IMG
+    - apk add --no-cache curl
+    - |-
+      curl --netrc -X PATCH https://api.heroku.com/apps/$HEROKU_APP/formation \
+      --data '{
+        "updates": [
+          {
+            "type": "web",
+            "docker_image": "'$(docker inspect $HEROKU_IMG --format={{.Id}})'"
+          }
+        ]
+      }' \
+      --header "Content-Type: application/json" \
+      --header "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+      --header "Authorization: Bearer ${HEROKU_TOKEN}"
+  only:
+    - master
