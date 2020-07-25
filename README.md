@@ -1,11 +1,13 @@
-# POEMS
+[![pipeline status](https://gitlab.com/stinodego/gentry/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/gentry/-/commits/develop)
+[![coverage report](https://gitlab.com/stinodego/gentry/badges/develop/coverage.svg)](https://gitlab.com/stinodego/gentry/-/commits/develop)
 
-[![pipeline status](https://gitlab.com/stinodego/poems/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/poems/-/commits/develop)
-[![coverage report](https://gitlab.com/stinodego/poems/badges/develop/coverage.svg)](https://gitlab.com/stinodego/poems/-/commits/develop)
+# gentry
+
+_"Poetry is elementary"_
 
 This is a simple application that pulls up a random poem.
 
-In later iterations, the app will generate poems automatically.
+In later iterations, the app will **gen**erate poe**try** automatically.
 
 ## Setup
 
@@ -15,7 +17,7 @@ This project uses [poetry](https://python-poetry.org/) for dependency management
 
 Clone the repository:
 
-`git clone https://gitlab.com/stinodego/poems.git`
+`git clone https://gitlab.com/stinodego/gentry.git`
 
 After cloning the repository, run the following command from the project base directory:
 

@@ -6,7 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from starlette.templating import Jinja2Templates, _TemplateResponse
 
-from poems.models.poem import haiku
+from gentry.models.poem import haiku
 
 Json = Dict[str, Any]
 
