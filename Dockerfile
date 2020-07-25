@@ -1,4 +1,4 @@
-# --- BASE IMAGE WITH USEFUL ENVS --- #
+# --- BASE IMAGE WITH GENERAL SETTINGS --- #
 FROM python:3.8-slim AS base
 
 # Nice-to-have optimizations
@@ -14,6 +14,10 @@ ENV PYTHONUNBUFFERED=1 \
 
 # Set path for using poetry and virtual env
 ENV PATH="$VENV_PATH/bin:$POETRY_HOME/bin:$PATH"
+
+# Set port
+ENV PORT=8000
+EXPOSE $PORT
 
 
 # --- BUILD IMAGE WITH RUNTIME DEPENDENCIES --- #
@@ -55,9 +59,7 @@ RUN poetry install
 # Copy all test, scripts, settings, etc.
 COPY . .
 
-EXPOSE 8000
-
-CMD ["uvicorn", "gentry.main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
+CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT --reload
 
 
 # --- MINIMAL RELEASE IMAGE --- #
@@ -72,6 +74,4 @@ RUN groupadd -r -g $GROUP_ID appuser \
  && useradd -r -l -u $USER_ID -g $GROUP_ID appuser
 USER appuser
 
-EXPOSE 8000
-
-CMD ["uvicorn", "gentry.main:app", "--host=0.0.0.0", "--port=8000", "--reload"]
+CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT

@@ -26,3 +26,8 @@ After cloning the repository, run the following command from the project base di
 This project defines pre-commit hooks. To use these, install the hooks:
 
 `poetry run pre-commit install`
+
+
+## References
+
+Insert relevant docs
