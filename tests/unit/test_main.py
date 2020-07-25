@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from poems import main
+from gentry import main
 
 client = TestClient(main.app)
 

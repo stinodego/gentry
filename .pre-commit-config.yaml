@@ -9,7 +9,7 @@ repos:
       rev: v0.782
       hooks:
       - id: mypy
-        files: src
+        files: ^src/
         additional_dependencies: [pydantic==1.6.1]
   -   repo: https://github.com/timothycrosley/isort
       rev: 5.1.3

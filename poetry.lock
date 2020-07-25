@@ -581,6 +581,7 @@ version = "8.1"
 
 [metadata]
 content-hash = "d49b417987c36b8d08dc601cce6f77451c7b6ff883738a03c08e4d4540f95466"
+lock-version = "1.0"
 python-versions = "^3.8"
 
 [metadata.files]

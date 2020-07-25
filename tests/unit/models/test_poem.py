@@ -1,4 +1,4 @@
-from poems.models import poem
+from gentry.models import poem
 
 
 def test_haiku(mocker):
