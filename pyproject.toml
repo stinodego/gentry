@@ -46,6 +46,8 @@ filterwarnings = [
     branch = true
     [tool.coverage.report]
     fail_under = 100
+    skip_covered = true
+    show_missing = true
 
 [build-system]
 requires = ["poetry_core>=1.0.0"]
