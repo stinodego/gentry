@@ -4,7 +4,6 @@ services:
 
 stages:
   - build
-  - qa
   - test
   - release
   - deploy
@@ -12,6 +11,7 @@ stages:
 variables:
   DOCKER_HOST: tcp://docker:2376
   DOCKER_TLS_CERTDIR: "/certs"
+  IMG_BASE: alpine
   BRANCH_IMG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
   RELEASE_IMG: $CI_REGISTRY_IMAGE:latest
 
@@ -28,23 +28,23 @@ dockerize:
     - >
       docker build
       --cache-from $BRANCH_IMG-base
-      --target=base
-      --tag $BRANCH_IMG-base .
+      --target=base --tag $BRANCH_IMG-base
+      --file docker/Dockerfile.$IMG_BASE .
     - >
       docker build
       --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build
-      --target=build
-      --tag $BRANCH_IMG-build .
+      --target=build --tag $BRANCH_IMG-build
+      --file docker/Dockerfile.$IMG_BASE .
     - >
       docker build
       --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build,$BRANCH_IMG-dev
-      --target=dev
-      --tag $BRANCH_IMG-dev .
+      --target=dev --tag $BRANCH_IMG-dev
+      --file docker/Dockerfile.$IMG_BASE .
     - >
       docker build
       --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build,$BRANCH_IMG-dev,$BRANCH_IMG
-      --target=release
-      --tag $BRANCH_IMG .
+      --target=release --tag $BRANCH_IMG
+      --file docker/Dockerfile.$IMG_BASE .
     - docker push $BRANCH_IMG-base
     - docker push $BRANCH_IMG-build
     - docker push $BRANCH_IMG-dev
@@ -54,13 +54,13 @@ lint:
   stage: test
   script:
     - docker pull $BRANCH_IMG-dev
-    - docker run $BRANCH_IMG-dev bash ./scripts/lint
+    - docker run $BRANCH_IMG-dev sh ./scripts/lint
 
 test:
   stage: test
   script:
     - docker pull $BRANCH_IMG-dev
-    - docker run $BRANCH_IMG-dev bash ./scripts/test
+    - docker run $BRANCH_IMG-dev sh ./scripts/test
 
 release-image:
   stage: release

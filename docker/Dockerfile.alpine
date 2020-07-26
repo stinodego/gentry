@@ -1,5 +1,5 @@
 # --- BASE IMAGE WITH GENERAL SETTINGS --- #
-FROM python:3.8-slim AS base
+FROM python:3.8-alpine AS base
 
 # Nice-to-have optimizations
 ENV PYTHONUNBUFFERED=1 \
@@ -23,21 +23,19 @@ EXPOSE $PORT
 # --- BUILD IMAGE WITH RUNTIME DEPENDENCIES --- #
 FROM base AS build
 
-# Install system dependencies
-RUN apt-get update && apt-get install --no-install-recommends -y \
-    curl \
- && rm -rf /var/lib/apt/lists/*
-
 # Install Poetry
-RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
-
+RUN apk add --no-cache curl \
+ && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python \
+ && apk del curl \
 # Create virtual env (already activated in PATH)
-RUN python -m venv $VENV_PATH
+ && python -m venv $VENV_PATH
 
 # Install Python runtime dependencies
 WORKDIR /app
 COPY pyproject.toml poetry.lock ./
-RUN poetry install --no-root --no-dev
+RUN apk add --no-cache build-base \
+ && poetry install --no-root --no-dev \
+ && apk del build-base
 
 # Install local package (poetry does not support non-editable installs yet)
 COPY src/ src/
@@ -45,33 +43,38 @@ RUN poetry build && pip install dist/*.whl
 
 
 # --- DEV IMAGE WITH ADDITIONAL DEPENDENCIES --- #
-FROM base as dev
-
-# Copy dependencies from build image
-COPY --from=build $POETRY_HOME $POETRY_HOME
-COPY --from=build $VENV_PATH $VENV_PATH
-COPY --from=build /app /app
+FROM build as dev
 
 # Install additional dependencies and editable local package
-WORKDIR /app
-RUN poetry install
+RUN apk add --no-cache build-base \
+ && poetry install \
+ && apk del build-base
 
-# Copy all test, scripts, settings, etc.
+# Copy all tests, scripts, settings, etc.
 COPY . .
 
-CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT --reload
+CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT
 
 
 # --- MINIMAL RELEASE IMAGE --- #
 FROM base as release
 
+# Copy pre-built app and dependencies from build image
 COPY --from=build $VENV_PATH $VENV_PATH
 
 # Run as non-root user
-ARG USER_ID=999
-ARG GROUP_ID=999
-RUN groupadd -r -g $GROUP_ID appuser \
- && useradd -r -l -u $USER_ID -g $GROUP_ID appuser
-USER appuser
+ENV USER=docker \
+    UID=12345 \
+    GID=12345
+RUN addgroup --system --gid $GID $USER \
+ && adduser \
+    --system \
+    --disabled-password \
+    --no-create-home \
+    --gecos "" \
+    --ingroup $USER \
+    --uid $UID \
+    $USER
+USER $USER
 
 CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT
