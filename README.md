@@ -1,7 +1,7 @@
-[![pipeline status](https://gitlab.com/stinodego/gentry/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/gentry/-/commits/develop)
-[![coverage report](https://gitlab.com/stinodego/gentry/badges/develop/coverage.svg)](https://gitlab.com/stinodego/gentry/-/commits/develop)
+[![pipeline status](https://gitlab.com/stinodego/autopoetry/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/autopoetry/-/commits/develop)
+[![coverage report](https://gitlab.com/stinodego/autopoetry/badges/develop/coverage.svg)](https://gitlab.com/stinodego/autopoetry/-/commits/develop)
 
-# gentry
+# autopoetry
 
 _"Poetry is elementary"_
 
@@ -17,7 +17,7 @@ This project uses [poetry](https://python-poetry.org/) for dependency management
 
 Clone the repository:
 
-`git clone https://gitlab.com/stinodego/gentry.git`
+`git clone https://gitlab.com/stinodego/autopoetry.git`
 
 After cloning the repository, run the following command from the project base directory:
 

@@ -1,6 +1,6 @@
 from fastapi.testclient import TestClient
 
-from gentry import main
+from autopoetry import main
 
 client = TestClient(main.app)
 
