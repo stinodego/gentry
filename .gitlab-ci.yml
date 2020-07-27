@@ -19,15 +19,6 @@ variables:
 before_script:
   - echo "$CI_DEPLOY_TOKEN" | docker login --username $CI_TOKEN_USER --password-stdin $CI_REGISTRY
 
-pre-commit:
-  stage: lint
-  image: python:3.8-alpine
-  before_script: []
-  script:
-    - apk add --no-cache git build-base libffi-dev
-    - pip install pre-commit
-    - pre-commit run --all-files
-
 dockerize:
   stage: build
   script:
@@ -60,11 +51,11 @@ dockerize:
     - docker push $BRANCH_IMG-dev
     - docker push $BRANCH_IMG
 
-# lint:
-#   stage: test
-#   script:
-#     - docker pull $BRANCH_IMG-dev
-#     - docker run $BRANCH_IMG-dev sh ./scripts/lint
+lint:
+  stage: test
+  script:
+    - docker pull $BRANCH_IMG-dev
+    - docker run $BRANCH_IMG-dev sh ./scripts/lint
 
 test:
   stage: test
