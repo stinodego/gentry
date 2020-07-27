@@ -74,7 +74,7 @@ release-image:
 deploy-to-heroku:
   stage: deploy
   variables:
-    HEROKU_APP: gentry-app
+    HEROKU_APP: autopoetry
     HEROKU_REGISTRY: registry.heroku.com
     HEROKU_IMG: $HEROKU_REGISTRY/$HEROKU_APP/web
   script:

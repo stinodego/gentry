@@ -51,7 +51,7 @@ RUN poetry install
 # Copy all tests, scripts, settings, etc.
 COPY . .
 
-CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT
+CMD uvicorn autopoetry.main:app --host=0.0.0.0 --port=$PORT
 
 
 # --- MINIMAL RELEASE IMAGE --- #
@@ -67,4 +67,4 @@ RUN groupadd -r -g $GROUP_ID appuser \
  && useradd -r -l -u $USER_ID -g $GROUP_ID appuser
 USER appuser
 
-CMD uvicorn gentry.main:app --host=0.0.0.0 --port=$PORT
+CMD uvicorn autopoetry.main:app --host=0.0.0.0 --port=$PORT

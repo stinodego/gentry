@@ -1,4 +1,4 @@
-from gentry.models import poem
+from autopoetry.models import poem
 
 
 def test_haiku(mocker):

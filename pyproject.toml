@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "gentry"
+name = "autopoetry"
 version = "0.1.0"
 description = "Automagically generate poems."
 license = "Proprietary"
 authors = ["Stijn de Gooijer <stijn@degooijer.io>"]
-repository = "https://gitlab.com/stinodego/gentry"
+repository = "https://gitlab.com/stinodego/autopoetry"
 packages = [
-    { include = "gentry", from = "src" }
+    { include = "autopoetry", from = "src" }
 ]
 
 [tool.poetry.dependencies]

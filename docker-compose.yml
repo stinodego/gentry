@@ -1,10 +1,11 @@
 version: '3.8'
 
 services:
-  gentry:
-    image: gentry:latest
+  autopoetry:
+    image: autopoetry:latest
     build:
       context: .
+      dockerfile: docker/Dockerfile.alpine
       args:
         - target=release
     ports:
