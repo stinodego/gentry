@@ -1,6 +1,7 @@
 from pathlib import Path
 from typing import Any, Dict
 
+import uvicorn
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
@@ -39,3 +40,9 @@ async def get_poem(request: Request, poem_type: str) -> _TemplateResponse:
         raise HTTPException(status_code=404, detail="Item not found")
 
     return templates.TemplateResponse("poem.html", {"request": request, **poem})
+
+
+if __name__ == "__main__":
+    uvicorn.run(
+        "autopoetry.main:app", host="0.0.0.0", port=8000, log_level="debug", reload=True
+    )
