@@ -21,30 +21,34 @@ before_script:
 dockerize:
   stage: build
   script:
+    # Base
     - docker pull $BRANCH_IMG-base || true
-    - docker pull $BRANCH_IMG-build || true
-    - docker pull $BRANCH_IMG-dev || true
     - >
       docker build
       --cache-from $BRANCH_IMG-base
       --target=base --tag $BRANCH_IMG-base
       --file docker/Dockerfile.$IMG_BASE .
     - docker push $BRANCH_IMG-base
+    # Build
+    - docker pull $BRANCH_IMG-build || true
     - >
       docker build
-      --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build
+      --cache-from $BRANCH_IMG-build
       --target=build --tag $BRANCH_IMG-build
       --file docker/Dockerfile.$IMG_BASE .
     - docker push $BRANCH_IMG-build
+    # Dev
+    - docker pull $BRANCH_IMG-dev || true
     - >
       docker build
-      --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build,$BRANCH_IMG-dev
+      --cache-from $BRANCH_IMG-dev
       --target=dev --tag $BRANCH_IMG-dev
       --file docker/Dockerfile.$IMG_BASE .
     - docker push $BRANCH_IMG-dev
+    # Release
     - >
       docker build
-      --cache-from $BRANCH_IMG-base,$BRANCH_IMG-build,$BRANCH_IMG-dev
+      --cache-from $BRANCH_IMG-dev
       --target=release --tag $BRANCH_IMG
       --file docker/Dockerfile.$IMG_BASE .
     - docker push $BRANCH_IMG

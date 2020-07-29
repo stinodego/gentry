@@ -24,7 +24,6 @@ This project defines pre-commit hooks. To use these, install the hooks:
 
 `poetry run pre-commit install`
 
-
 ## References
 
 Insert relevant docs
