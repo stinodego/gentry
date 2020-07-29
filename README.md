@@ -1,6 +1,3 @@
-[![pipeline status](https://gitlab.com/stinodego/autopoetry/badges/develop/pipeline.svg)](https://gitlab.com/stinodego/autopoetry/-/commits/develop)
-[![coverage report](https://gitlab.com/stinodego/autopoetry/badges/develop/coverage.svg)](https://gitlab.com/stinodego/autopoetry/-/commits/develop)
-
 # autopoetry
 
 _"Poetry is elementary"_
