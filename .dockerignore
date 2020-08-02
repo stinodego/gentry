@@ -1,11 +1,12 @@
 # Git
-.git
+.git/
 .gitignore
 .gitlab-ci.yml
 .gitkeep
 
 # Docker
 Dockerfile
+docker-compose.yml
 .dockerignore
 
 # Python
@@ -13,7 +14,9 @@ Dockerfile
 **/*.pyc
 **/.ipynb_checkpoints/
 **/*.ipynb
+**/*.egg-info/
 dist/
+build/
 
 # Testing
 .mypy_cache/
@@ -25,6 +28,8 @@ dist/
 .vscode/
 
 # Project
+docker/
 notebooks/
 .env
 .env.sample
+README.md
