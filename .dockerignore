@@ -18,7 +18,6 @@ dist/
 # Testing
 .mypy_cache/
 .pytest_cache/
-.tox/
 .coverage
 
 # IDE
@@ -27,4 +26,3 @@ dist/
 # Project
 notebooks/
 .env
-.env.sample

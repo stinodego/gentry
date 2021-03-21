@@ -1,10 +1,10 @@
 # --- BASE IMAGE WITH GENERAL SETTINGS --- #
-FROM python:3.8-alpine AS base
+FROM python:3.8.8-slim AS base
 
 # Important settings
 ENV VENV_PATH=/opt/venv \
     POETRY_HOME=/opt/poetry \
-    POETRY_VERSION=1.0.10 \
+    POETRY_VERSION=1.1.5 \
     POETRY_VIRTUALENVS_CREATE=false \
 # Nice-to-have optimizations
     PYTHONUNBUFFERED=1 \
@@ -25,33 +25,33 @@ EXPOSE $PORT
 FROM base AS build
 
 # Install Poetry
-RUN apk add --no-cache curl \
- && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python \
- && apk del curl \
+RUN apt-get update && apt-get install --no-install-recommends -y curl \
+ && curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python - \
+ && apt-get purge --auto-remove -y curl \
+ && rm -rf /var/lib/apt/lists/*
+
 # Create virtual env (already activated in PATH)
- && python -m venv $VENV_PATH
+RUN python -m venv $VENV_PATH
 
 # Install Python runtime dependencies
 WORKDIR /app
 COPY pyproject.toml poetry.lock ./
-RUN apk add --no-cache build-base \
- && poetry install --no-root --no-dev \
- && apk del build-base
+RUN poetry install --no-root --no-dev
 
 
 # --- DEV IMAGE WITH ADDITIONAL DEPENDENCIES --- #
 FROM build as dev
 
 # Install additional dependencies
-RUN apk add --no-cache build-base \
- && poetry install --no-root \
- && apk del build-base
+RUN poetry install --no-root
 
 # Copy all tests, scripts, settings, etc. and do editable install
 COPY . .
 RUN poetry install
 
-CMD uvicorn autopoetry.main:app --host=0.0.0.0 --port=$PORT
+CMD gunicorn autopoetry.main:app \
+    --worker-class uvicorn.workers.UvicornWorker \
+    --bind=0.0.0.0:$PORT
 
 
 # --- BUILD IMAGE WITH LOCAL PACKAGE --- #
@@ -72,14 +72,12 @@ COPY --from=build-full $VENV_PATH $VENV_PATH
 ARG USER=app
 ARG UID=777
 ARG GID=777
-RUN addgroup --system --gid $GID $USER \
- && adduser \
+RUN groupadd --system --gid $GID $USER \
+ && useradd \
     --system \
-    --disabled-password \
-    --no-create-home \
-    --gecos "" \
-    --ingroup $USER \
+    --no-log-init \
     --uid $UID \
+    --gid $GID \
     $USER
 USER $USER
 

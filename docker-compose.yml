@@ -1,12 +1,10 @@
 version: '3.8'
 
 services:
-  autopoetry:
+  app:
     image: autopoetry:latest
     build:
       context: .
-      dockerfile: docker/Dockerfile.alpine
-      args:
-        - target=release
+      target: release
     ports:
     - "8000:8000"
