@@ -24,18 +24,24 @@ python-lint:
     - pip install flake8==3.9.0 black==20.8b1 isort==5.8.0 mypy==0.812
     - chmod +x ./scripts/lint
     - ./scripts/lint
+  except:
+    - tags
 
 dockerize:
   stage: build
   script:
     - docker build --target=dev --tag $BRANCH_IMG-dev .
     - docker push $BRANCH_IMG-dev
+  except:
+    - tags
 
 test:
   stage: test
   script:
     - docker pull $BRANCH_IMG-dev
     - docker run $BRANCH_IMG-dev sh ./scripts/test
+  except:
+    - tags
 
 release-image:
   stage: release
