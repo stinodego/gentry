@@ -3,7 +3,6 @@ from pathlib import Path
 import uvicorn
 from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel
 from starlette.templating import Jinja2Templates, _TemplateResponse
 
 from autopoetry.models.poem import PoemReader
