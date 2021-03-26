@@ -16,7 +16,8 @@ uvicorn = {extras = ["standard"], version = "^0.13.4"}
 aiofiles = "^0.6.0"
 gunicorn = "^20.0.4"
 Jinja2 = "^2.11.3"
-pydantic = "^1.8.1"
+pydantic = {extras = ["dotenv"], version = "^1.8.1"}
+boto3 = "^1.17.33"
 
 [tool.poetry.dev-dependencies]
 requests = "^2.25.1"
@@ -45,7 +46,7 @@ filterwarnings = [
     source = ["src"]
     branch = true
     [tool.coverage.report]
-    fail_under = 100
+    # fail_under = 100
     skip_covered = true
     show_missing = true
     exclude_lines = [
