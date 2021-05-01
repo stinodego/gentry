@@ -1,3 +1,54 @@
+body {
+	background: rgb(219, 201, 201);
+	color: #111;
+	font: 14px Baskerville, "Palatino Linotype", "Times New Roman", Times, serif;
+	text-align: center;
+	}
+
+	div, h1, h2, p {
+		margin: 0;
+		padding: 0;
+		}
+
+#poem {
+	margin: auto;
+	padding: 20px 0;
+	text-align: left;
+	width: 390px;
+	}
+
+h1, h2 {
+	font-weight: normal;
+	text-align: center;
+	}
+
 h1 {
-    color: red;
-}
+	font-size: 34px;
+	line-height: 1.2;
+	margin-bottom: 10px;
+	}
+
+h2 {
+	color: #666;
+	font-size: 18px;
+	font-style: italic;
+	margin-bottom: 30px;
+	}
+
+p {
+	line-height: 1.5;
+	margin-bottom: 15px;
+	}
+
+h2:before {
+	content: '— ';
+	}
+
+h2:after {
+	content: ' —';
+	}
+
+#poem p:last-child {
+	margin-bottom: 30px;
+	padding-bottom: 30px;
+	}

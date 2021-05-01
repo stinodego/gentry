@@ -4,9 +4,17 @@
     <link href="{{ url_for('static', path='/styles.css') }}" rel="stylesheet">
 </head>
 <body>
-    <h1>{{ title }}</h1>
-    <p>{{ content }}</p>
-    <p><b>{{ author }}</b></p>
-    <p><i>{{ source }}</i></p>
+    <div id="poem">
+        <h1>{{ title }}</h1>
+
+        <h2>{{ author }}</h2>
+
+        {% for paragraph in content.split('\n\n') -%}
+        <p>{% for line in paragraph.split('\n') -%}
+                {{ line }}<br>
+            {% endfor %}
+        </p>
+        {% endfor %}
+    </div>
 </body>
 </html>
